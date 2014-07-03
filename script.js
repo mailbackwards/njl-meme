@@ -178,7 +178,7 @@ MEME.SVG = ( function ( $ ) {
    * Adds headline to canvas
    */
   var addHeadline = function () {
-    if ($( '#memeselect ').is(':checked')) {
+    if ($( '#memeselect ').is( ':checked' )) {
       var mw = 550;
     } else {
       var mw = 650
@@ -222,11 +222,12 @@ MEME.SVG = ( function ( $ ) {
     var text = $( '#credit' ).val();
     // Set our own canvas styles
     context.fillStyle = 'white';
-    context.font = 'normal 10pt freight-sans-pro';
-    if ($( '#memeselect ').is(':checked')) {
+    if ($( '#memeselect' ).is( ':checked' )) {
+      context.font = 'normal 10pt freight-sans-pro';
       context.textAlign = 'left';
       context.fillText( text, 45, 322 );
     } else {
+      context.font = 'normal 18pt freight-sans-pro';
       context.textAlign = 'right';
       context.fillText( text, 710, 300 );
     }
@@ -264,7 +265,7 @@ MEME.SVG = ( function ( $ ) {
   }
 
   var handleQuoteselect = function () {
-    if ($( '#memeselect ').is(':checked')) {
+    if ($( '#memeselect ').is( ':checked' )) {
       $( '#headline' ).val("Headline goes here.");
       $( '#credit' ).val("Source: ");
     } else {
