@@ -1,0 +1,213 @@
+* {
+    -moz-box-sizing:border-box;
+    box-sizing:border-box
+}
+
+body {
+    background-color:#fff;
+    color:#4c4e4d;
+    display:table;
+    font-family:'Helvetica';
+    font-size:100%;
+    height:100%;
+    line-height:1.5625;
+    padding-bottom:4em;
+    padding-top:4em;
+    margin:0;
+    width:100%
+}
+
+.content {
+    max-width:1100px;
+    margin:0 auto
+}
+
+.left {
+    float:left
+}
+
+.right {
+    float:right
+}
+
+.cf:before,.cf:after {
+    content:" ";
+    display:table
+}
+
+.cf:after {
+    clear:both
+}
+
+.cf {
+    *zoom:1
+}
+
+.svg {
+    float:left;
+    width:755px
+}
+
+.svg .canvas {
+    height:378px;
+    width:755px
+}
+
+.svg img {
+    display:none
+}
+
+.svg .download {
+    background:#2980b9;
+    border:none;
+    color:#fff;
+    cursor:pointer;
+    display:block;
+    font-weight:700;
+    line-height:50px;
+    text-align:center;
+    text-decoration:none;
+    width:100%;
+    -webkit-transition:background-color ease-in-out;
+    -webkit-transition-delay:.3s;
+    -moz-transition:background-color ease-in-out .3s;
+    -o-transition:background-color ease-in-out .3s;
+    transition:background-color ease-in-out .3s
+}
+
+.svg .download:hover {
+    background:rgba(41,128,185,0.6)
+}
+
+@media (max-width: 1100px) {
+.svg {
+    float:none;
+    padding:0 1em
+}
+}
+
+.editor {
+    float:left;
+    padding-left:2em;
+    width:345px
+}
+
+.editor .image-upload {
+    margin-bottom:1em
+}
+
+@media (max-width: 1100px) {
+.editor .image-upload {
+    width:100%
+}
+}
+
+.editor .dropzone {
+    border:2px dashed #efefef;
+    color:#6a6a69;
+    display:table-cell;
+    font-size:18px;
+    font-weight:700;
+    height:80px;
+    text-align:center;
+    vertical-align:middle;
+    width:345px
+}
+
+@media (max-width: 1100px) {
+.editor .dropzone {
+    width:100%
+}
+}
+
+.editor #header {
+    margin-bottom:0
+}
+
+.editor #fontsize {
+    width:100%
+}
+
+.editor .overlay {
+    cursor:pointer;
+    float:left;
+    line-height:12px;
+    margin:2px 5px;
+    padding:3px 5px 5px
+}
+
+.editor .overlay-black {
+    background-color:#000;
+    color:#000
+}
+
+.editor .overlay-grey {
+    background-color:#999;
+    color:#999
+}
+
+.editor .overlay-blue {
+    background-color:#3498db;
+    color:#3498db
+}
+
+.editor .overlay-orange {
+    background-color:#ff8c00;
+    color:#ff8c00
+}
+
+.editor .overlay-active {
+    color:#fff
+}
+
+@media (max-width: 1100px) {
+.editor {
+    padding:1em;
+    width:100%
+}
+}
+
+form label {
+    display:block;
+    font-weight:700;
+    margin-bottom:5px
+}
+
+form input[type="text"] {
+    border:1px solid #efefef;
+    line-height:30px;
+    margin-bottom:2em;
+    outline:0;
+    padding:0 5px;
+    width:100%
+}
+
+form input[type="text"]:focus {
+    border:1px solid #ff0
+}
+
+form input[type="range"] {
+    margin-bottom:2em;
+    width:100%
+}
+
+form select,form option {
+    background:#efefef;
+    border:1px solid #cfcfcf;
+    border-radius:0;
+    line-height:30px;
+    margin-bottom:2em;
+    width:100%
+}
+
+form fieldset {
+    border:0;
+    float:left;
+    margin:0 auto;
+    padding:0;
+    width:50%
+}
+
+form fieldset label {
+    display:inline
+}
