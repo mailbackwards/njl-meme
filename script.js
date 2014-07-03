@@ -4,10 +4,10 @@ MEME.SVG = ( function ( $ ) {
 
   // Configure me if you want
   var watermark       = '',
-      fontSizeSmall   = '14pt Helvetica',
-      fontSizeDefault = '18pt Helvetica',
-      fontSizeLarge   = '24pt Helvetica',
-      fontSizeHuge    = '36pt Helvetica';
+      fontSizeSmall   = 'bold 14pt freight-sans-pro',
+      fontSizeDefault = 'bold 18pt freight-sans-pro',
+      fontSizeLarge   = 'bold 24pt freight-sans-pro',
+      fontSizeHuge    = 'bold 36pt freight-sans-pro';
 
 
   // Variables
@@ -36,7 +36,7 @@ MEME.SVG = ( function ( $ ) {
     canvas.height = canvasHeight;
     // Set up context defaults
     context.textBaseline = 'top';
-    context.font         = 'normal 18pt Helvetica';
+    context.font         = 'normal 18pt freight-sans-pro';
     context.fillStyle    = 'white';
     // Add canvas
     context.drawImage( img, 0, 0 );
@@ -218,7 +218,7 @@ MEME.SVG = ( function ( $ ) {
     // Set our own canvas styles
     context.fillStyle = 'white';
     context.textAlign = 'left';
-    context.font = 'normal 10pt Helvetica';
+    context.font = 'normal 10pt freight-sans-pro';
     // Create that credit
     context.fillText( text, 45, 322 );
   }
