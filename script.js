@@ -14,6 +14,7 @@ MEME.SVG = ( function ( $ ) {
   var canvas       = document.getElementById( 'canvas' ),
       canvasHeight = 378,
       canvasWidth  = 755,
+      textMaxWidth = canvasWidth - 200,
       deviceWidth  = window.innerWidth,
       context      = canvas.getContext( '2d' ),
       download     = document.getElementById( 'download' ),
@@ -91,7 +92,7 @@ MEME.SVG = ( function ( $ ) {
       var testLine  = line + words[n] + ' ',
           metrics   = context.measureText( testLine ),
           testWidth = metrics.width;
-      if ( testWidth > maxWidth && n > 0 ) {
+      if ( testWidth > (maxWidth - x) && n > 0 ) {
         context.fillText( line, x, y );
         line = words[n] + ' ';
         y += lineHeight;
@@ -175,19 +176,26 @@ MEME.SVG = ( function ( $ ) {
 
 
   /**
+  * Determines the start coordinate of the caption text.
+  */
+  var setTextCoords = function() {
+    var xCoord = $( '#slider' ).val(),
+        x = (xCoord / 5) * textMaxWidth,
+        y = 45;
+    return [x, y]
+  }
+
+
+  /**
    * Adds headline to canvas
    */
   var addHeadline = function () {
-    if ($( '#memeselect ').is( ':checked' )) {
-      var mw = 550;
-    } else {
-      var mw = 650;
-    };
+    var coords = setTextCoords();
     // Create our own canvas values
     var text = $( '#headline' ).val(),
-        maxWidth = mw,
-        x = 45,
-        y = 45;
+        maxWidth = textMaxWidth,
+        x = coords[0],
+        y = coords[1];
     context.font = fontSize
     context.textAlign = 'left';
     context.fillStyle = 'white';
@@ -223,12 +231,12 @@ MEME.SVG = ( function ( $ ) {
     // Set our own canvas styles
     context.fillStyle = 'white';
     if ($( '#memeselect' ).is( ':checked' )) {
-      context.font = 'normal 10pt freight-sans-pro';
       context.textAlign = 'left';
+      context.font = 'normal 10pt freight-sans-pro';
       context.fillText( text, 45, 322 );
     } else {
-      context.font = 'normal 18pt freight-sans-pro';
       context.textAlign = 'right';
+      context.font = 'normal 18pt freight-sans-pro';
       context.fillText( text, 710, 300 );
     };
   }
@@ -264,11 +272,16 @@ MEME.SVG = ( function ( $ ) {
     addCanvas();
   }
 
+  /**
+   * Sets values for the specific meme format.
+   */
   var handleQuoteselect = function () {
-    if ($( '#memeselect ').is( ':checked' )) {
+    if ($( '#memeselect' ).is( ':checked')) {
+      textMaxWidth = canvasWidth - 200;
       $( '#headline' ).val("Headline goes here.");
       $( '#credit' ).val("Source: ");
     } else {
+      textMaxWidth = canvasWidth - 100;
       $( '#headline' ).val("Quote goes here. Use option-[ and shift-option-[ for curly quotation marks.");
       $( '#credit' ).val("Name of author/speaker");
     };
@@ -366,6 +379,9 @@ MEME.SVG = ( function ( $ ) {
     var dropzone = document.getElementById( 'dropzone' );
     dropzone.addEventListener( 'dragover', handleDragAndDrop, false );
     dropzone.addEventListener( 'drop', handleFiles, false );
+
+    var slider = document.getElementById( 'slider' );
+    slider.addEventListener( 'change', addCanvas, false );
 
     $( '.overlay' ).on( 'click', handleOverlay );
     $( '#fontsize' ).on( 'change', handleFontSize );
