@@ -181,8 +181,8 @@ MEME.SVG = ( function ( $ ) {
     if ($( '#memeselect ').is( ':checked' )) {
       var mw = 550;
     } else {
-      var mw = 650
-    }
+      var mw = 650;
+    };
     // Create our own canvas values
     var text = $( '#headline' ).val(),
         maxWidth = mw,
@@ -230,7 +230,7 @@ MEME.SVG = ( function ( $ ) {
       context.font = 'normal 18pt freight-sans-pro';
       context.textAlign = 'right';
       context.fillText( text, 710, 300 );
-    }
+    };
   }
 
   /**
