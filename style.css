@@ -211,3 +211,9 @@ form fieldset {
 form fieldset label {
     display:inline
 }
+
+#draggable {
+    width: 100px;
+    height: 100px;
+    background: #ccc;
+  }

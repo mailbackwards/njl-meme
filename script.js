@@ -383,6 +383,10 @@ MEME.SVG = ( function ( $ ) {
     var slider = document.getElementById( 'slider' );
     slider.addEventListener( 'change', addCanvas, false );
 
+    $( '#draggable' ).draggable();
+    var drag = document.getElementById( 'draggable' );
+    drag.addEventListener( 'change', addCanvas, false );
+
     $( '.overlay' ).on( 'click', handleOverlay );
     $( '#fontsize' ).on( 'change', handleFontSize );
     $( '#alignment' ).on( 'change', handleAlignment );
