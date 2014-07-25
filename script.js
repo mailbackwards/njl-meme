@@ -4,21 +4,26 @@ MEME.SVG = ( function ( $ ) {
 
   // Configure me if you want
   var watermark       = '',
-      fontSizeSmall   = 'bold 14pt freight-sans-pro',
-      fontSizeDefault = 'bold 18pt freight-sans-pro',
-      fontSizeLarge   = 'bold 24pt freight-sans-pro',
-      fontSizeHuge    = 'bold 36pt freight-sans-pro';
+      fontSizeSmall   = '14pt',
+      fontSizeDefault = '18pt',
+      fontSizeLarge   = '24pt',
+      fontSizeHuge    = '36pt',
+      fontFamilyDefault = 'freight-sans-pro',
+      fontWeightDefault = 'bold';
 
 
   // Variables
   var canvas       = document.getElementById( 'canvas' ),
       canvasHeight = 378,
       canvasWidth  = 755,
-      textMaxWidth = canvasWidth - 200,
+      textOffset   = 200,
       deviceWidth  = window.innerWidth,
       context      = canvas.getContext( '2d' ),
       download     = document.getElementById( 'download' ),
       fontSize     = fontSizeDefault,
+      fontFamily   = fontFamilyDefault,
+      fontWeight   = fontWeightDefault,
+      creditSize   = 0.6,
       img          = document.getElementById( 'image-storage' ),
       overlay      = true,
       overlayColor = 'blue',
@@ -37,7 +42,7 @@ MEME.SVG = ( function ( $ ) {
     canvas.height = canvasHeight;
     // Set up context defaults
     context.textBaseline = 'top';
-    context.font         = 'normal 18pt freight-sans-pro';
+    context.font         = fontWeightDefault + ' ' + fontSizeDefault + ' ' + fontFamilyDefault;
     context.fillStyle    = 'white';
     // Add canvas
     context.drawImage( img, 0, 0 );
@@ -92,7 +97,7 @@ MEME.SVG = ( function ( $ ) {
       var testLine  = line + words[n] + ' ',
           metrics   = context.measureText( testLine ),
           testWidth = metrics.width;
-      if ( testWidth > (maxWidth - x) && n > 0 ) {
+      if ( testWidth > maxWidth && n > 0 ) {
         context.fillText( line, x, y );
         line = words[n] + ' ';
         y += lineHeight;
@@ -176,28 +181,16 @@ MEME.SVG = ( function ( $ ) {
 
 
   /**
-  * Determines the start coordinate of the caption text.
-  */
-  var setTextCoords = function() {
-    var xCoord = $( '#slider' ).val(),
-        x = (xCoord / 5) * textMaxWidth,
-        y = 45;
-    return [x, y]
-  }
-
-
-  /**
    * Adds headline to canvas
    */
   var addHeadline = function () {
-    var coords = setTextCoords();
     // Create our own canvas values
     var text = $( '#headline' ).val(),
-        maxWidth = textMaxWidth,
-        x = coords[0],
-        y = coords[1];
-    context.font = fontSize
-    context.textAlign = 'left';
+        x = $( '#slider' ).val() * canvas.width,
+        y = 45,
+        maxWidth = canvas.width - textOffset - x;
+    context.font = fontWeight + ' ' + fontSize + ' ' + fontFamily;
+    context.textAlign = alignment;
     context.fillStyle = 'white';
     // Adds text shadow
     if ( $( '#shadow' ).prop( 'checked' )  ) {
@@ -206,16 +199,18 @@ MEME.SVG = ( function ( $ ) {
       context.shadowOffsetY = -2;
       context.shadowBlur    = 10;
     }
-    // Centers text
-    if ( alignment == 'center'  ) {
-      context.textAlign = 'center';
-      x = canvas.width / 2;
+    if ( alignment == 'right' ) {
+      maxWidth = x - textOffset
+    } else if ( alignment == 'center' ) {
       y = canvas.height - canvas.height / 1.5;
       maxWidth = canvas.width - canvas.width / 3;
-    } else if ( alignment == 'right' ) {
-      context.textAlign = 'right';
-      x = canvas.width - 40;
-    }
+      // Check x axis to see if it's spilling off the canvas
+      if (x + maxWidth / 2 > canvas.width) {
+        maxWidth = canvas.width - x 
+      } else if (x - maxWidth / 2 < 0) {
+        maxWidth = x 
+      }
+    };
     // Let's create that headline
     wrapText( context, text, x, y, maxWidth, lineHeight );
     // Reset the shadow
@@ -227,18 +222,16 @@ MEME.SVG = ( function ( $ ) {
    */
   var addCredit = function () {
     // Get credit
-    var text = $( '#credit' ).val();
+    var text = $( '#credit' ).val(),
+        x = $( '#creditslider' ).val() * canvas.width,
+        y = 322;
     // Set our own canvas styles
     context.fillStyle = 'white';
-    if ($( '#memeselect' ).is( ':checked' )) {
-      context.textAlign = 'left';
-      context.font = 'normal 10pt freight-sans-pro';
-      context.fillText( text, 45, 322 );
-    } else {
-      context.textAlign = 'right';
-      context.font = 'normal 18pt freight-sans-pro';
-      context.fillText( text, 710, 300 );
-    };
+    context.textAlign = 'left';
+    creditFontSize = (parseInt(fontSize.substr(0,2)) * creditSize).toString() + 'pt'
+    context.font = fontWeight + ' ' + creditFontSize + ' ' + fontFamily;
+    // Create that credit
+    context.fillText( text, x, y );
   }
 
   /**
@@ -246,7 +239,6 @@ MEME.SVG = ( function ( $ ) {
    */
   var handleFontSize = function () {
     var size = $( '#fontsize option:selected' ).val();
-    console.log( size )
     switch( size ) {
       case 'smaller':
           fontSize = fontSizeSmall;
@@ -260,7 +252,56 @@ MEME.SVG = ( function ( $ ) {
       default:
           fontSize = fontSizeDefault;
     }
+    fontSize = fontSize;
     lineHeight = $( '#fontsize option:selected' ).data( 'height' );
+    addCanvas();
+  }
+
+  /**
+   * Change credit size based on data attribute of option elements
+   */
+  var handleCreditSize = function () {
+    var size = $( '#creditsize option:selected' ).val();
+    switch( size ) {
+      case 'smaller':
+          creditSize = 0.4;
+          break;
+      case 'bigger':
+          creditSize = 0.8;
+          break;
+      case 'huge':
+          creditSize = 1.0;
+          break;
+      default:
+          creditSize = 0.6;
+    }
+    creditSize = creditSize;
+    addCanvas();
+  }
+
+  /**
+   * Change font size based on data attribute of option elements
+   */
+  var handleFontFamily = function () {
+    var family = $( this ).val();
+    if(this.id == 'fontfamily_freeform') {
+      if(family === '') {
+        family = $('#fontfamily option:selected').val();
+      } else {
+        $('#fontfamily').val('');
+      }
+    } else {
+      $('#fontfamily_freeform').val('');
+    }
+    fontFamily = family;
+    addCanvas();
+  }
+
+  /**
+   * Change font weight based on data attribute of checkbox elements
+   */
+  var handleFontWeight = function () {
+    fontWeight = $( '#fontweight' ).prop( 'checked' ) ? 'bold' : 'normal'
     addCanvas();
   }
 
@@ -269,22 +310,6 @@ MEME.SVG = ( function ( $ ) {
    */
   var handleAlignment = function () {
     alignment = $( '#alignment option:selected' ).val();
-    addCanvas();
-  }
-
-  /**
-   * Sets values for the specific meme format.
-   */
-  var handleQuoteselect = function () {
-    if ($( '#memeselect' ).is( ':checked')) {
-      textMaxWidth = canvasWidth - 200;
-      $( '#headline' ).val("Headline goes here.");
-      $( '#credit' ).val("Source: ");
-    } else {
-      textMaxWidth = canvasWidth - 100;
-      $( '#headline' ).val("Quote goes here. Use option-[ and shift-option-[ for curly quotation marks.");
-      $( '#credit' ).val("Name of author/speaker");
-    };
     addCanvas();
   }
 
@@ -371,6 +396,12 @@ MEME.SVG = ( function ( $ ) {
     var scale = document.getElementById('scale');
     scale.addEventListener( 'change', addCanvas, false );
 
+    var slider = document.getElementById( 'slider' );
+    slider.addEventListener( 'change', addCanvas, false );
+
+    var creditSlider = document.getElementById( 'creditslider' );
+    creditSlider.addEventListener( 'change', addCanvas, false );
+
     var shadow = document.getElementById( 'shadow' );
     shadow.addEventListener( 'change', addCanvas, false );
 
@@ -380,13 +411,13 @@ MEME.SVG = ( function ( $ ) {
     dropzone.addEventListener( 'dragover', handleDragAndDrop, false );
     dropzone.addEventListener( 'drop', handleFiles, false );
 
-    var slider = document.getElementById( 'slider' );
-    slider.addEventListener( 'change', addCanvas, false );
-
     $( '.overlay' ).on( 'click', handleOverlay );
     $( '#fontsize' ).on( 'change', handleFontSize );
+    $( '#fontweight' ).on( 'click', handleFontWeight );
+    $( '#creditsize' ).on( 'change', handleCreditSize );
+    $( '#fontfamily' ).on( 'change', handleFontFamily );
+    $( '#fontfamily_freeform' ).on( 'change', { test: 'test' }, handleFontFamily );
     $( '#alignment' ).on( 'change', handleAlignment );
-    $( '.quoteselect' ).on( 'change', handleQuoteselect );
   }
 
   /**
